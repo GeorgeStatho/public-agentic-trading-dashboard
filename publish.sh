@@ -13,6 +13,8 @@ BASE="${SNAPSHOT_API_BASE:-http://127.0.0.1:8080}"
 REMOTE="${SNAPSHOT_PAGES_REMOTE:-git@github.com:GeorgeStatho/public-agentic-trading-dashboard.git}"
 # A deploy key with write access to the site repo only: if it leaked, only the snapshot site could change.
 KEY="${SNAPSHOT_DEPLOY_KEY:-$HOME/.ssh/dashboard_pages}"
+# Pages reads its custom domain from a CNAME file on the branch; every publish replaces the branch, so write it here.
+DOMAIN="${SNAPSHOT_PAGES_DOMAIN-public-dashboard.huvle.org}"
 
 WORK="$(mktemp -d)"
 trap 'rm -rf "$WORK"' EXIT
@@ -23,6 +25,7 @@ VITE_SNAPSHOT=1 npx vite build --base=./ --outDir "$WORK/site" --emptyOutDir --l
 rm -f "$WORK/site/"*.json
 python3 "$HERE/capture.py" --base "$BASE" --out "$WORK/site/data"
 touch "$WORK/site/.nojekyll"  # serve files as they are; Jekyll would skip names starting with _
+if [[ -n "$DOMAIN" ]]; then echo "$DOMAIN" > "$WORK/site/CNAME"; fi
 
 cd "$WORK/site"
 git init -q -b gh-pages

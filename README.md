@@ -45,6 +45,7 @@ The run publishes nothing when no route could be read.
 | `SNAPSHOT_API_BASE` | `http://127.0.0.1:8080` |
 | `SNAPSHOT_PAGES_REMOTE` | `git@github.com:GeorgeStatho/public-agentic-trading-dashboard.git` |
 | `SNAPSHOT_DEPLOY_KEY` | `~/.ssh/dashboard_pages` |
+| `SNAPSHOT_PAGES_DOMAIN` | `public-dashboard.huvle.org` (written as `CNAME`; set it empty for no custom domain) |
 
 ## Tests
 
