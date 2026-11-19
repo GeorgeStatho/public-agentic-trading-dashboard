@@ -57,6 +57,16 @@ ROUTES: tuple[str, ...] = (
 BACKTEST_LIST = "/api/backtests?limit=100"
 ARTICLE_LIST = "/api/exposure-map/articles?limit=50"
 REQUEST_GAP_SECONDS = 0.25  # under nginx's 10 requests a second per visitor
+# Scraped article text belongs to its publishers: the public site never carries it, whatever the API returns.
+ARTICLE_TEXT_KEYS = frozenset({"body", "raw_json"})
+
+
+def without_article_text(node: Any) -> Any:
+    if isinstance(node, dict):
+        return {key: without_article_text(value) for key, value in node.items() if key not in ARTICLE_TEXT_KEYS}
+    if isinstance(node, list):
+        return [without_article_text(value) for value in node]
+    return node
 
 
 def snapshot_key(url: str) -> str:
@@ -89,7 +99,7 @@ def snapshot(fetch: Callable[[str], Any], out_dir: Path, *, backtest_runs: int =
         except Exception as exc:  # one broken route must not cost the whole snapshot
             manifest["failed"][url] = str(exc) or type(exc).__name__
             continue
-        (out_dir / f"{key}.json").write_text(json.dumps(payload), encoding="utf-8")
+        (out_dir / f"{key}.json").write_text(json.dumps(without_article_text(payload)), encoding="utf-8")
         manifest["captured"].append(url)
         if url == BACKTEST_LIST:
             pending += [f"/api/backtests/{run_id}" for run_id in _ids(payload, "runs")[:backtest_runs]]

@@ -39,6 +39,9 @@ class FakeApi:
             return {"runs": [{"id": 140}, {"id": 138}]}
         if url == "/api/exposure-map/articles?limit=50":
             return {"articles": [{"id": 13449}, {"id": 12748}]}
+        if url == "/api/exposure-map/13449":
+            return {"article": {"title": "Chip curbs widen", "body": "PUBLISHER TEXT"},
+                    "evidence": [{"title": "t", "raw_json": '{"text": "PUBLISHER TEXT"}'}]}
         return {"url": url}
 
 
@@ -67,6 +70,12 @@ class DashboardSnapshotTests(unittest.TestCase):
         for url in ("/api/backtests/140", "/api/backtests/138", "/api/exposure-map/13449", "/api/exposure-map/12748"):
             self.assertIn(url, api.requested)
         self.assertTrue((self.out / "backtests_140.json").exists())
+
+    def test_scraped_article_text_is_never_saved(self):
+        self.module.snapshot(FakeApi(), self.out)
+        saved = (self.out / "exposure-map_13449.json").read_text()
+        self.assertNotIn("PUBLISHER TEXT", saved)
+        self.assertEqual({"article": {"title": "Chip curbs widen"}, "evidence": [{"title": "t"}]}, json.loads(saved))
 
     def test_only_the_latest_backtest_runs_are_kept(self):
         api = FakeApi()
