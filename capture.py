@@ -14,9 +14,10 @@ import json
 import re
 import sys
 import time
-from datetime import datetime, timezone
+from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 from urllib.parse import parse_qsl, urlsplit
 from urllib.request import Request, urlopen
 
@@ -86,7 +87,7 @@ def _ids(payload: Any, field: str) -> list[int]:
 def snapshot(fetch: Callable[[str], Any], out_dir: Path, *, backtest_runs: int = 25) -> dict[str, Any]:
     """GET every route (and the runs and articles their lists name), save each under its key, return the manifest."""
     out_dir.mkdir(parents=True, exist_ok=True)
-    manifest: dict[str, Any] = {"captured_at": datetime.now(timezone.utc).isoformat(), "captured": [], "failed": {}}
+    manifest: dict[str, Any] = {"captured_at": datetime.now(UTC).isoformat(), "captured": [], "failed": {}}
     keys: dict[str, str] = {}
     pending = list(ROUTES)
     while pending:
@@ -96,7 +97,7 @@ def snapshot(fetch: Callable[[str], Any], out_dir: Path, *, backtest_runs: int =
             raise ValueError(f"{url} and {keys[key]} would share the file {key}.json")
         try:
             payload = fetch(url)
-        except Exception as exc:  # one broken route must not cost the whole snapshot
+        except Exception as exc:  # noqa: BLE001 - one broken route must not cost the whole snapshot
             manifest["failed"][url] = str(exc) or type(exc).__name__
             continue
         (out_dir / f"{key}.json").write_text(json.dumps(without_article_text(payload)), encoding="utf-8")
