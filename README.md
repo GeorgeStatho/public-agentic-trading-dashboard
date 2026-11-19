@@ -2,7 +2,7 @@
 
 A daily, read-only snapshot of the dashboard from
 [agentic-trading-research](https://github.com/GeorgeStatho/agentic-trading-research), an LLM-driven options
-paper-trading experiment. **View it at <https://georgestatho.github.io/public-agentic-trading-dashboard/>.**
+paper-trading experiment. **View it at <https://public-dashboard.huvle.org/>.**
 
 - `gh-pages` is the site: the dashboard built in snapshot mode plus the API responses it reads, replaced by one
   new commit each weekday evening. Nothing in it talks to a server.
