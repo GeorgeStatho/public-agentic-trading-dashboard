@@ -1,0 +1,1 @@
+import{n as e}from"./api-DCkoN5n1.js";var t=15e3,n=null;function r(){let r=Date.now();if(n&&r-n.requestedAt<t)return n.response;let i=e(`/api/dashboard-kpis`,`KPI cards`),a={requestedAt:r,response:i};return n=a,i.catch(()=>{n===a&&(n=null)}),i}export{r as t};

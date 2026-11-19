@@ -1,0 +1,1 @@
+async function e(e,t){let n=await fetch(e);if(!n.ok)throw Error(`Failed to load ${t}: ${n.status}`);return await n.json()}function t(t,n){return e(`${t}${t.includes(`?`)?`&`:`?`}ts=${Date.now()}`,n)}export{t as n,e as t};

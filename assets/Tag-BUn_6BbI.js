@@ -1,0 +1,1 @@
+import{n as e}from"./Panel-5o37_TzJ.js";var t=e(),n={gain:`bg-gain-bg text-gain-text`,loss:`bg-loss-bg text-loss-text`,neutral:`bg-raised text-ink-2`,accent:`bg-accent-bg text-ticker`,info:`bg-[#0e1f33] text-[#79b8ff]`};function r({tone:e=`neutral`,children:r}){return(0,t.jsx)(`span`,{className:`badge badge-sm rounded-sm border-0 ${n[e]}`,children:r})}export{r as t};

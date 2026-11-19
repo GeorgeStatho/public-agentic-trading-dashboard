@@ -1,0 +1,1 @@
+{"rows": [{"closed_positions": 10, "exit_reason": "trailing_profit_stop", "median_mfe_minus_realized_pct": 27.059483050847458, "observed_path_count": 6}, {"closed_positions": 13, "exit_reason": "stop_loss", "median_mfe_minus_realized_pct": 39.31583760683761, "observed_path_count": 5}]}
